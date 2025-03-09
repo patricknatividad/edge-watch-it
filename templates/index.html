@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Value Monitor</title>
+    <link rel="stylesheet" href="static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Edge WatchIt</h1>
+
+        <!-- Authentication Section -->
+        <div class="form-container">
+            <h2>Authentication</h2>
+            <form id="auth-form">
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div class="form-group">
+                    <button type="button" onclick="authenticate()">Authenticate</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- API Endpoint Monitoring Section -->
+        <div class="form-container disabled" id="monitor-form">
+            <h2>API Endpoint Monitoring</h2>
+            <form>
+                <div class="form-group">
+                    <label for="endpoint">API Endpoint:</label>
+                    <input type="text" id="endpoint" name="endpoint" required>
+                </div>
+                <div class="form-group">
+                    <label for="interval">Sampling Interval (seconds):</label>
+                    <select id="interval" name="interval">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button type="button" onclick="startMonitoring()">Start Monitoring</button>
+                    <button type="button" onclick="stopMonitoring()">Stop Monitoring</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- API Output Section -->
+        <div class="form-container disabled" id="current-value-container">
+            <h2>Current Value</h2>
+            <textarea id="current-value" rows="5" readonly></textarea>
+        </div>
+
+        <!-- Value History Section -->
+        <div class="form-container disabled" id="history-container">
+            <h2>History</h2>
+            <div id="history-table-container">
+                <table id="history-table">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="static/scripts.js"></script>
+</body>
+</html>
