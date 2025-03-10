@@ -7,9 +7,8 @@ import os
 
 app = Flask(__name__)
 
-# Configuration
-AUTH_ENDPOINT = os.getenv('AUTH_ENDPOINT', 'https://10.164.195.223/edge/api/v1/login/getauthtoken/profile')
 BEARER_TOKEN = None
+EDGE_IP = None
 
 monitoring_thread = None
 stop_event = Event()
@@ -24,10 +23,16 @@ def index():
 def authenticate():
     """Authenticate user and return a token if successful."""
     global BEARER_TOKEN
+    global EDGE_IP
+    
+    EDGE_IP = request.form['ipAddress']
+
     auth_details = {
         "username": request.form['username'],
         "password": request.form['password']
     }
+    AUTH_ENDPOINT = f"https://{EDGE_IP}/edge/api/v1/login/getauthtoken/profile"
+
     response = requests.post(AUTH_ENDPOINT, data=auth_details, verify=False)
     if response.status_code == 200:
         BEARER_TOKEN = response.json().get('accessToken')
