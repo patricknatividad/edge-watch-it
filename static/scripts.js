@@ -39,7 +39,11 @@ function disableMonitoringSections() {
 }
 
 async function startMonitoring() {
-    const endpoint = document.getElementById('endpoint').value;
+    const ipAddress = document.getElementById('ipAddress').value;
+    const path = document.getElementById('path').value;
+    const param = document.getElementById('param').value;
+    const endpoint = `https://${ipAddress}/edge/api/v1/graph?path=${path}&p=${param}`;
+    
     const interval = document.getElementById('interval').value;
 
     await fetch('/start_monitoring', {

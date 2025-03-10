@@ -8,7 +8,7 @@ import os
 app = Flask(__name__)
 
 # Configuration
-AUTH_ENDPOINT = os.getenv('AUTH_ENDPOINT', 'https://example.com/api/authenticate')
+AUTH_ENDPOINT = os.getenv('AUTH_ENDPOINT', 'https://10.164.195.223/edge/api/v1/login/getauthtoken/profile')
 BEARER_TOKEN = None
 
 monitoring_thread = None
@@ -23,31 +23,20 @@ def index():
 @app.route('/authenticate', methods=['POST'])
 def authenticate():
     """Authenticate user and return a token if successful."""
-    #global BEARER_TOKEN
-    #auth_details = {
-    #    "username": request.form['username'],
-    #    "password": request.form['password']
-    #}
-    #response = requests.post(AUTH_ENDPOINT, json=auth_details)
-    #if response.status_code == 200:
-    #    BEARER_TOKEN = response.json().get('token')
-    #    return jsonify({'status': 'Authentication successful'}), 200
-    #else:
-    #    return jsonify({'status': 'Authentication failed', 'message': 'Invalid username or password'}), 401
-
     global BEARER_TOKEN
-    # Mock credentials
-    mock_username = "admin"
-    mock_password = "password123"
-
-    username = request.form['username']
-    password = request.form['password']
-
-    if username == mock_username and password == mock_password:
-        BEARER_TOKEN = "dummy_token"  # Use a dummy token for testing
-        return jsonify({'status': 'Authentication successful'}), 200
+    auth_details = {
+        "username": request.form['username'],
+        "password": request.form['password']
+    }
+    response = requests.post(AUTH_ENDPOINT, data=auth_details, verify=False)
+    if response.status_code == 200:
+        BEARER_TOKEN = response.json().get('accessToken')
+        return jsonify({'status': 'Authentication successful', 'accessToken': BEARER_TOKEN}), 200
     else:
-        return jsonify({'status': 'Authentication failed', 'message': 'Invalid username or password'}), 401
+        #error_message = response.json().get('message', 'Unknown error')
+        error_message = "ERROR: Authentication failed"
+        
+        return jsonify({'status': 'Authentication failed', 'message': error_message}), 401
 
 @app.route('/start_monitoring', methods=['POST'])
 def start_monitoring():
@@ -64,11 +53,12 @@ def start_monitoring():
         while not stop_event.is_set():
             try:
                 headers = {"Authorization": f"Bearer {BEARER_TOKEN}"}
-                response = requests.get(endpoint, headers=headers)
+                response = requests.get(endpoint, headers=headers, verify=False)
                 response.raise_for_status()
                 data = response.json()
                 timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                 log.append({'time': timestamp, 'value': data})
+                print(f"Monitoring result at {timestamp}: {data}")  # Alert the user of the result
                 time.sleep(interval)
             except requests.RequestException as e:
                 handle_monitoring_error(e)
