@@ -1,9 +1,20 @@
 let intervalId;
 
 async function authenticate() {
-    const ipAddress = document.getElementById('ipAddress').value;
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
+    //const ipAddress = document.getElementById('ipAddress').value;
+    //const username = document.getElementById('username').value;
+    //const password = document.getElementById('password').value;
+    
+    //EDGE_IP = "10.164.195.223"
+
+    //auth_details = {
+    //    "username": "so",
+    //    "password": "Emerson1!"
+    //}
+
+    const ipAddress =  "10.164.195.223"
+    const username = "so"
+    const password = "Emerson1!"
     
     const response = await fetch('/authenticate', {
         method: 'POST',
@@ -40,15 +51,16 @@ function disableMonitoringSections() {
 }
 
 async function startMonitoring() {
-    const ipAddress = document.getElementById('ipAddress').value;
+    //const ipAddress = document.getElementById('ipAddress').value;
+    const ipAddress =  "10.164.195.223"
     const path = document.getElementById('path').value;
     const param = document.getElementById('param').value;
     
     const endpoint = `https://${ipAddress}/edge/api/v1/graph?path=${path}&p=${param}`;
-    //const endpoint = `https://${ipAddress}/edge/api/v1/graph/${path}`;
-
     const interval = document.getElementById('interval').value;
+
     alert("Start monitoring: " + endpoint);
+
     await fetch('/start_monitoring', {
         method: 'POST',
         headers: {

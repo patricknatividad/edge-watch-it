@@ -25,12 +25,20 @@ def authenticate():
     global BEARER_TOKEN
     global EDGE_IP
     
-    EDGE_IP = request.form['ipAddress']
+    EDGE_IP = "10.164.195.223"
 
     auth_details = {
-        "username": request.form['username'],
-        "password": request.form['password']
+        "username": "so",
+        "password": "Emerson1!"
     }
+
+    #EDGE_IP = request.form['ipAddress']
+
+    #auth_details = {
+    #    "username": request.form['username'],
+    #    "password": request.form['password']
+    #}
+
     AUTH_ENDPOINT = f"https://{EDGE_IP}/edge/api/v1/login/getauthtoken/profile"
 
     response = requests.post(AUTH_ENDPOINT, data=auth_details, verify=False)
@@ -53,14 +61,21 @@ def start_monitoring():
 
     endpoint = request.form['endpoint']
     interval = int(request.form['interval'])
-
+    param = endpoint.split("=")[-1]
+                
     def monitor():
         while not stop_event.is_set():
             try:
                 headers = {"Authorization": f"Bearer {BEARER_TOKEN}"}
                 response = requests.get(endpoint, headers=headers, verify=False)
                 response.raise_for_status()
-                data = response.json()
+                
+                #result will contain full payload from the API
+                #data will contain only the specific value we need to monitor
+
+                result = response.json()
+                data = result['p'][param]['value']
+                
                 timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                 log.append({'time': timestamp, 'value': data})
                 print(f"Monitoring result at {timestamp}: {data}")  # Alert the user of the result
