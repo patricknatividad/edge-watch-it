@@ -92,3 +92,11 @@ textarea {
 .narrow-input {
     width: 20%;
 }
+.description {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+.disclaimer {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
